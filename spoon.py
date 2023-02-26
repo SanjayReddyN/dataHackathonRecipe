@@ -5,18 +5,17 @@ import requests
 import json
 import sys
 import spoonacular as sp
-from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen
 import requests
 
 def spoon_df(thelist):
-    api = sp.API("31361112cdbe4c7aad28f3ca2879b6a7")
+    api = sp.API("20806923dbc94afa9fd0c5da288346dd")
     ingredients=thelist[0]
     for i in range(1,len(thelist)):
         if ("_" in thelist[i]):
             thelist[i]=thelist[i].replace('_',' ')
         ingredients+=",+"+thelist[i]
-    url="https://api.spoonacular.com/recipes/findByIngredients?ingredients={ingredients}&ignorePantry=true&ranking=2&apiKey=31361112cdbe4c7aad28f3ca2879b6a7"
+    url="https://api.spoonacular.com/recipes/findByIngredients?ingredients={ingredients}&ignorePantry=true&ranking=2&apiKey=20806923dbc94afa9fd0c5da288346dd"
     response=api.search_recipes_by_ingredients(ingredients, fillIngredients=False, ranking=2)
     data=response.json()
     data = [{k: v for k, v in x.items() if k in ['title','id', 'missedIngredients']} for x in data]
@@ -35,14 +34,12 @@ def spoon_df(thelist):
     df['missedIngredients']=missed
     df['calories'],df['carbs'],df['fat'],df['protein']=[""]*rows,[""]*rows,[""]*rows,[""]*rows
     for i in range(0,rows):
-        u=f"https://api.spoonacular.com/recipes/{df['id'][i]}/nutritionWidget.json?apiKey=31361112cdbe4c7aad28f3ca2879b6a7"
+        u=f"https://api.spoonacular.com/recipes/{df['id'][i]}/nutritionWidget.json?apiKey=20806923dbc94afa9fd0c5da288346dd"
         resp = requests.get(url=u)
         data2 = resp.json()
         str=json.dumps(data2)[0:(json.dumps(data2).index("bad")-3)]+"}"
         res = json.loads(str)
         for k in res.keys():
             df[k][i]=res[k][0:-1]
-    print(df.drop(columns='id'))
+    #print(df.drop(columns='id'))
     return df.drop(columns='id')
-a=["Peanut_Butter"]
-spoon_df(a)
