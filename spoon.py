@@ -11,8 +11,6 @@ import requests
 
 def spoon_df():
     api = sp.API("31361112cdbe4c7aad28f3ca2879b6a7")
-
-
     ingredients=sys.argv[0]
     for i in range(1,len(sys.argv)):
         ingredients+=",+"+sys.argv[i]
@@ -44,4 +42,4 @@ def spoon_df():
             df[k][i]=res[k][0:-1]
     print(df.drop(columns='id'))
     return df.drop(columns='id')
-spoon_df()    
+spoon_df()
