@@ -9,11 +9,13 @@ from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen
 import requests
 
-def spoon_df():
+def spoon_df(thelist):
     api = sp.API("31361112cdbe4c7aad28f3ca2879b6a7")
-    ingredients=sys.argv[0]
-    for i in range(1,len(sys.argv)):
-        ingredients+=",+"+sys.argv[i]
+    ingredients=thelist[0]
+    for i in range(1,len(thelist)):
+        if ("_" in thelist[i]):
+            thelist[i]=thelist[i].replace('_',' ')
+        ingredients+=",+"+thelist[i]
     url="https://api.spoonacular.com/recipes/findByIngredients?ingredients={ingredients}&ignorePantry=true&ranking=2&apiKey=31361112cdbe4c7aad28f3ca2879b6a7"
     response=api.search_recipes_by_ingredients(ingredients, fillIngredients=False, ranking=2)
     data=response.json()
@@ -42,4 +44,5 @@ def spoon_df():
             df[k][i]=res[k][0:-1]
     print(df.drop(columns='id'))
     return df.drop(columns='id')
-spoon_df()
+a=["Peanut_Butter"]
+spoon_df(a)
